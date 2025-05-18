@@ -19,9 +19,9 @@ class User extends Authenticatable
      * @var list<string>
      */
     protected $fillable = [
+        'name',
         'email',
-        'password',
-        'role'
+        'password'
     ];
 
     /**
@@ -47,7 +47,7 @@ class User extends Authenticatable
         ];
     }
 
-    public function rentals(){
+    public function rental(){
         return $this->hasMany(Rental::class);
     }
 }

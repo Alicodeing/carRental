@@ -6,6 +6,7 @@ use App\Models\User;
 use Illuminate\Http\Request;
 use Inertia\Inertia;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\Hash;
 
 class AuthController extends Controller
 {
@@ -28,7 +29,7 @@ class AuthController extends Controller
             return redirect()->back()->with('error', 'invalid Credentials');
         }
         
-         return redirect('/')->with('success', 'Login success');
+         return redirect('/dashboard')->with('success', 'Login success');
     }catch(\Throwable $th){
         return redirect()->back()->with('error', $th->getMessage());
         }
@@ -53,11 +54,10 @@ class AuthController extends Controller
             'password' => $request->password,
         ]);
 
-        $data = ['message' => 'User Created Successfully', 'status'=>true,'error'=>''];
-        return redirect('/login')->with($data);
+        return redirect('/login')->with('success', 'User Created Successfully');
         }catch(\Throwable $th){
-            $data = ['message'=>'Something went wrong','status'=>false,'error'=>''];
-            return redirect('/register')->with($data);
+           
+             return redirect('/register')->with('error', 'Something went wrong');
         }
         
     }

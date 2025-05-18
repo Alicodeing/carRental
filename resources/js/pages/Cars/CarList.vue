@@ -1,52 +1,73 @@
 <script setup>
-import { Link, usePage } from '@inertiajs/vue3';
-import Layout from '../Shared/Layout.vue';
-import { useToast } from 'vue-toastification';
+import { Link, router, usePage } from '@inertiajs/vue3'
+import { computed } from 'vue'
 
 const props = defineProps({
-    cars: Object
-});
+  cars: Array
+})
 
+// const flash = computed(() => usePage().props.flash)
+
+const deleteCar = (id) => {
+  if (confirm('Are you sure you want to delete this car?')) {
+    router.delete(`/car/${id}`)
+  }
+}
 </script>
 
 <template>
-    <!-- <Layout> -->
-        <div class="p-4">
-            <div class="flex justify-between items-center mb-4">
-                <h1 class="text-2xl font-bold">Car List</h1>
-                <Link href="/cars/create" class="bg-blue-600 hover:bg-blue-700 text-white px-4 py-2 rounded-lg">Add Car</Link>
-            </div>
-            <table class="w-full table-auto border">
-                <thead>
-                    <tr class="bg-gray-200">
-                        <th class="p-2">Name</th>
-                        <th class="p-2">Brand</th>
-                        <th class="p-2">model</th>
-                        <th class="p-2">year</th>
-                        <th class="p-2">car_type</th>
-                        <th class="p-2">daily_rent_price</th>
-                        <th class="p-2">availability</th>
-                        <th class="p-2">image</th>
-                        <th class="p-2">Actions</th>
-                    </tr>
-                </thead>
-                <tbody>
-                    <tr v-for="(brand, index) in brands" :key="index">
-                        <td class="p-2">{{ brand.name }}</td>
-                        <td class="p-2">{{ brand.brand }}</td>
-                        <td class="p-2">{{ brand.model }}</td>
-                        <td class="p-2">{{ brand.year }}</td>
-                        <td class="p-2">{{ brand.car_type }}</td>
-                        <td class="p-2">{{ brand.daily_rent_price }}</td>
-                        <td class="p-2">{{ brand.availability }}</td>
-                        <td class="p-2"><img :src="brand.image" alt="" class="w-10 h-10 rounded-full"></td>
-                        <td class="p-2 space-x-2">
-                            <Link href="" class="text-blue-600">Edit</Link>
-                            <Link href="#" method="delete" as="button" class="text-red-600">Delete</Link>
-                        </td>
-                    </tr>
-                </tbody>
-            </table>
-        </div>
-    <!-- </Layout> -->
+  <div class="container mx-auto px-4 py-8">
+    <h1 class="text-2xl font-bold mb-4">Car List</h1>
+
+    <!-- Flash Message -->
+    <!-- <div v-if="flash.success" class="bg-green-100 text-green-800 px-4 py-2 rounded mb-4">
+      {{ flash.success }}
+    </div> -->
+
+    <!-- Create Button -->
+    <div class="mb-4">
+      <Link href="/car/create" class="bg-blue-500 text-white px-4 py-2 rounded hover:bg-blue-600">
+        + Add New Car
+      </Link>
+    </div>
+
+    <!-- Table -->
+    <div class="overflow-x-auto">
+      <table class="min-w-full bg-white border">
+        <thead>
+          <tr class="bg-gray-100 text-left text-sm">
+            <th class="px-4 py-2 border">#</th>
+            <th class="px-4 py-2 border">Name</th>
+            <th class="px-4 py-2 border">Brand</th>
+            <th class="px-4 py-2 border">Model</th>
+            <th class="px-4 py-2 border">Year</th>
+            <th class="px-4 py-2 border">Type</th>
+            <th class="px-4 py-2 border">Price</th>
+            <th class="px-4 py-2 border">Available</th>
+            <th class="px-4 py-2 border">Actions</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr v-for="(car, index) in cars" :key="car.id" class="text-sm">
+            <td class="px-4 py-2 border">{{ index + 1 }}</td>
+            <td class="px-4 py-2 border">{{ car.name }}</td>
+            <td class="px-4 py-2 border">{{ car.brand }}</td>
+            <td class="px-4 py-2 border">{{ car.model }}</td>
+            <td class="px-4 py-2 border">{{ car.year }}</td>
+            <td class="px-4 py-2 border">{{ car.car_type }}</td>
+            <td class="px-4 py-2 border">${{ car.daily_rent_price }}</td>
+            <td class="px-4 py-2 border">
+              <span :class="car.availability ? 'text-green-600' : 'text-red-600'">
+                {{ car.availability ? 'Yes' : 'No' }}
+              </span>
+            </td>
+            <td class="px-4 py-2 border space-x-2">
+              <Link :href="`/car/${car.id}/edit`" class="text-blue-500 hover:underline">Edit</Link>
+              <button @click="deleteCar(car.id)" class="text-red-500 hover:underline">Delete</button>
+            </td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+  </div>
 </template>
